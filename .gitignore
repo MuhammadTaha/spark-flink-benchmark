@@ -1,3 +1,6 @@
 .DS_Store
 .idea/
 emr-examples/FlinkOnEMR/target
+benchmarkClient/target/
+benchmarkClient/.idea/
+benchmarkClient/target
