@@ -9,13 +9,13 @@ public class TestWorkloadManager {
     public static void main(String[] args) {
         String AWS_USERNAME = args[0];
         String AWS_USER_SECRET = args[1];
-        String CLUSTER_TYPE = "spark";
-        String METRIC_TYPE = "groupby";
+        String CLUSTER_TYPE = "flink";
+        String METRIC_TYPE = "aggregate";
 
 
         //TODO new input parameters:
         // Concrete path to the data file
-        String S3_BUCKET_DATA_FILE = "s3://test-emr-ws1819/data/test.txt";
+        String S3_BUCKET_DATA_FILE = "s3://test-emr-ws1819/data/data.csv";
         //log directory for EMR cluster; just an empty directory in a S3 bucket
         String EMR_LOG_DIR = "s3://test-emr-ws1819/log/";
         // ####### End new parameters

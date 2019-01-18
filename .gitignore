@@ -4,20 +4,23 @@ emr-examples/FlinkOnEMR/target
 benchmarkClient/target/
 benchmarkClient/.idea/
 benchmarkClient/target
+Metrics/Flink-GroupBy/target/
+Metrics/Flink-Sorting/target/
+Metrics/Flink-Aggregation/target/
 
 # Eclipse
 .classpath
 .project
 .settings/
- 
+
 # Intellij
 .idea/
 *.iml
 *.iws
- 
+
 # Mac
 .DS_Store
- 
+
 # Maven
 log/
 target/

@@ -57,16 +57,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.spark</groupId>
-			<artifactId>spark-sql_2.11</artifactId>
-			<version>2.4.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sparkjava</groupId>
-			<artifactId>spark-core</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
 			<groupId>com.github.javafaker</groupId>
 			<artifactId>javafaker</artifactId>
 			<version>0.16</version>
