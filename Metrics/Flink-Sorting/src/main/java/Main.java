@@ -12,33 +12,20 @@ import org.joda.time.DateTime;
 public class Main {
 
     public static void main(String[] args) throws Exception {
+        // parse parameters
+        ParameterTool params = ParameterTool.fromArgs(args);
+        // path to ratings.csv file
+        String csvPath = params.getRequired("input");
 
-        // for batch programs use ExecutionEnvironment instead of StreamExecutionEnvironment
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
 
-        // create a TableEnvironment
-        // for batch programs use BatchTableEnvironment instead of StreamTableEnvironment
-        StreamTableEnvironment tableEnv = TableEnvironment.getTableEnvironment(env);
-    }
+        // read a CSV file with three fields
+        DataSet<Tuple9<String, String, String, String, String, String, String, String, String>> csvInput = env.readCsvFile(csvPath)
+                .ignoreFirstLine()
+                .types(String.class, String.class, String.class,
+                        String.class, String.class, String.class,
+                        String.class, String.class, String.class);
 
-    static class TupleConverter implements MapFunction<String, Tuple9<Integer, Integer, String, String, String, Integer, String, DateTime, Double>> {
-
-        @Override
-        public Tuple9<Integer, Integer, String, String, String, Integer, String, DateTime, Double> map(String csvLine) throws Exception {
-            String[] split = csvLine.split(",");
-
-            if (!split[0].equals("id")){
-                return Tuple9.of(Integer.parseInt(split[0]),
-                        Integer.parseInt(split[1]),
-                        split[2],
-                        split[3],
-                        split[4],
-                        Integer.parseInt(split[5]),
-                        split[6],
-                        DateTime.parse(split[7]),
-                        Double.parseDouble(split[8]));
-            }
-
-        }
+        csvInput.sortPartition(5, Order.ASCENDING).print();
     }
 }

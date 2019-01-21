@@ -9,8 +9,8 @@ public class TestWorkloadManager {
     public static void main(String[] args) {
         String AWS_USERNAME = args[0];
         String AWS_USER_SECRET = args[1];
-        String CLUSTER_TYPE = "flink";
-        String METRIC_TYPE = "aggregate";
+        String CLUSTER_TYPE = "flink"; //"flink", "spark"
+        String METRIC_TYPE = "aggregate"; //"groupby", "sorting", "aggregate"
 
 
         //TODO new input parameters:
