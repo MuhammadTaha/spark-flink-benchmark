@@ -1,5 +1,10 @@
 package benchmark;
 
+import java.io.File;
+
+import benchmark.Workload.WorkloadManager;
+import benchmark.io.S3Connector;
+
 public class BenchmarkClient {
 
 	static String AWS_USERNAME = "";
@@ -30,14 +35,19 @@ public class BenchmarkClient {
 
 		// TODO - Generate Fake Data
 		DataGenerator dataGenerator = new DataGenerator();
-		dataGenerator.generateData(DATA_SIZE);
+		File dataFile = dataGenerator.generateData(DATA_SIZE);
+
+		// TODO upload
+		if (!S3_BUCKET_DATA_FILE.isEmpty() && !DATA_SIZE.isEmpty()) {
+			S3Connector s3 = new S3Connector(AWS_USERNAME, AWS_USER_SECRET, S3_BUCKET_DATA_FILE, "region",
+					S3_BUCKET_DATA_FILE, "bucketName");
+			s3.upload(dataFile);
+		}
 
 		// TODO - WorkloadManager
-		// WorkloadManager workloadManager = new WorkloadManager(AWS_USERNAME,
-		// AWS_USER_SECRET, EMR_LOG_DIR);
-		// workloadManager.startBenchmark(CLUSTER_TYPE, METRIC_TYPE,
-		// S3_BUCKET_DATA_FILE, AWS_USERNAME, AWS_USER_SECRET,
-		// EMR_LOG_DIR);
+		WorkloadManager workloadManager = new WorkloadManager(AWS_USERNAME, AWS_USER_SECRET, EMR_LOG_DIR);
+		workloadManager.startBenchmark(CLUSTER_TYPE, METRIC_TYPE, S3_BUCKET_DATA_FILE, AWS_USERNAME, AWS_USER_SECRET,
+				EMR_LOG_DIR);
 
 		// TODO - MetricsManager -> is this really necessary ?
 

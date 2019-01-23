@@ -12,11 +12,13 @@ import com.github.javafaker.Faker;
 public class DataGenerator {
 	enum Unit {
 		ENTITIES, SPACE
-	};
+	}
 
-	public void generateData(String data_size) {
+	private static final String delimiter = ",";
+
+	public File generateData(String data_size) {
 		if (data_size.isEmpty())
-			return;
+			return null;
 
 		long size;
 		Unit unit = Unit.ENTITIES;
@@ -72,15 +74,16 @@ public class DataGenerator {
 				String idString = Integer.toString(id++);
 				String userIdString = Integer.toString(userId);
 				Book book = faker.book();
-				String title = book.title();
-				String genre = book.genre();
-				String author = book.author();
+				String title = clean(book.title());
+				String genre = clean(book.genre());
+				String author = clean(book.author());
 				String pages = Integer.toString(10 + ((int) (Math.random() * 1000)));
-				String publisher = book.publisher();
+				String publisher = clean(book.publisher());
 
-				String date = faker.date().between(from.getTime(), to.getTime()).toString();
+				String date = clean(faker.date().between(from.getTime(), to.getTime()).toString());
 				String price = Double.toString(((int) (Math.random() * 100 * 100) / 100));
-				data = String.join(", ", idString, userIdString, title, genre, author, pages, publisher, date, price);
+				data = String.join(delimiter, idString, userIdString, title, genre, author, pages, publisher, date,
+						price);
 				data += "\n";
 				pw.write(data);
 
@@ -89,13 +92,17 @@ public class DataGenerator {
 							"gen: " + (unit == Unit.ENTITIES ? percent(id, size) : percent(dataFile.length(), size)));
 				}
 			}
-
 		}
 		System.out.println("gen: 100.0%");
 		pw.close();
+		return dataFile;
 	}
 
 	private String percent(long count, long total) {
 		return (Math.floor((double) count / total * 1000) / 10) + "%";
+	}
+
+	private String clean(String s) {
+		return s.replaceAll(delimiter, "");
 	}
 }
