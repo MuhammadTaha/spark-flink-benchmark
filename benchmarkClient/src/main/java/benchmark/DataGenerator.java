@@ -74,6 +74,7 @@ public class DataGenerator {
 				String idString = Integer.toString(id++);
 				String userIdString = Integer.toString(userId);
 				Book book = faker.book();
+
 				String title = clean(book.title());
 				String genre = clean(book.genre());
 				String author = clean(book.author());

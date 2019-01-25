@@ -22,14 +22,14 @@ We defined the following fixed data structure (CSV file):
 `id, userId, title, genre, author, pages, publisher, date, price`
 
 This structure is used to perform the following workload jobs on each cluster type (Flink | Spark) for different input sizes:
-- Group-By: genre, count per group | [Flink implementation](Metrics/Flink-GroupBy/Readme.md), [Spark implementation](https://www.google.com/search?ei=ooZFXJfrNY_ZwQLd46nwCw&q=todo&oq=todo&gs_l=psy-ab.3..0i67j0i20i263l2j0l2j0i131j0l3j0i131.498175.498588..498839...0.0..0.62.232.4......0....1..gws-wiz.......0i71j35i39.iNYnyrcTGss)
-- Sorting: number of pages (ascending) | [Flink implementation](Metrics/Flink-Sorting/Readme.md), [Spark implementation](https://www.google.com/search?ei=ooZFXJfrNY_ZwQLd46nwCw&q=todo&oq=todo&gs_l=psy-ab.3..0i67j0i20i263l2j0l2j0i131j0l3j0i131.498175.498588..498839...0.0..0.62.232.4......0....1..gws-wiz.......0i71j35i39.iNYnyrcTGss)
-- Aggregation: price (max) | [Flink implementation](Metrics/Flink-Aggregation/Readme.md), [Spark implementation](https://www.google.com/search?ei=ooZFXJfrNY_ZwQLd46nwCw&q=todo&oq=todo&gs_l=psy-ab.3..0i67j0i20i263l2j0l2j0i131j0l3j0i131.498175.498588..498839...0.0..0.62.232.4......0....1..gws-wiz.......0i71j35i39.iNYnyrcTGss)
+- Group-By: genre, count per group | [Flink implementation](Metrics/Flink-GroupBy/Readme.md), [Spark implementation](Metrics/Spark-GroupBy/Readme.md)
+- Sorting: number of pages (ascending) | [Flink implementation](Metrics/Flink-Sorting/Readme.md), [Spark implementation](Metrics/Spark-Sorting/Readme.md)
+- Aggregation: price (max) | [Flink implementation](Metrics/Flink-Aggregation/Readme.md), [Spark implementation](Metrics/Spark-Aggregation/Readme.md)
 
 When the jobs are done, the system will collect the runtime and throughput (=metrics) for each job.
 
 ## Documentation
 
-[Report](https://www.overleaf.com/project/5c48853d95d38a3a6ff877b9)
+[Report](https://github.com/flmu/ec2018-assignment3.git)
 
 [Poster](docs/Poster.pdf)

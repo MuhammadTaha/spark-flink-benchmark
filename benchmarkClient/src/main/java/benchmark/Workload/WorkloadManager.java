@@ -1,5 +1,8 @@
 package benchmark.Workload;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This class is used for managing the workloads on the AWS EMR clusters
  */
@@ -8,6 +11,7 @@ public class WorkloadManager {
     private String AWS_USERNAME;
     private String AWS_USER_SECRET;
     private String EMR_LOG_DIR;
+    List<Long> executionResults = new ArrayList<Long>();
 
     /**
      * @param AWS_USERNAME AWS Credentials
@@ -29,10 +33,10 @@ public class WorkloadManager {
      * @param CLUSTER_TYPE
      * @param METRIC_TYPE
      * @param S3_BUCKET_DATA_FILE Path to the input file
-     * @return Execution time in ms
+     * @return Execution time in ms (List)
      */
-    public long startBenchmark(String CLUSTER_TYPE, String METRIC_TYPE, String S3_BUCKET_DATA_FILE,
-                               String AWSKey, String AWSSecret, String EMRLogDir){
+    public List<Long> startBenchmark(String CLUSTER_TYPE, String METRIC_TYPE, String S3_BUCKET_DATA_FILE,
+                                        String AWSKey, String AWSSecret, String EMRLogDir, int numberOfIteration) throws InterruptedException {
 
         ClusterManager clusterManager = new ClusterManager(METRIC_TYPE,
                 S3_BUCKET_DATA_FILE,
@@ -40,8 +44,56 @@ public class WorkloadManager {
                 AWSSecret,
                 EMRLogDir,
                 CLUSTER_TYPE);
-        return clusterManager.startBenchmark();
+
+        //execute EMR clusters in parallel
+        Thread emrThreads[] = new Thread[numberOfIteration];
+        for (int i = 0; i < emrThreads.length; i++)
+        {
+            Thread T1 = new Thread(new EMRThread(CLUSTER_TYPE, METRIC_TYPE, S3_BUCKET_DATA_FILE,
+                    AWSKey, AWSSecret, EMRLogDir));
+            T1.start();
+            emrThreads[i] = T1;
+        }
+
+        //wait until each cluster execution is done
+        for (int i = 0; i < emrThreads.length; i++)
+        {
+            emrThreads[i].join();
+        }
+
+        return executionResults;
 
 
+    }
+
+    private class EMRThread implements Runnable {
+        String CLUSTER_TYPE;
+        String METRIC_TYPE;
+        String S3_BUCKET_DATA_FILE;
+        String AWSKey;
+        String AWSSecret;
+        String EMRLogDir;
+
+        public EMRThread(String CLUSTER_TYPE, String METRIC_TYPE, String S3_BUCKET_DATA_FILE,
+                         String AWSKey, String AWSSecret, String EMRLogDir){
+            this.CLUSTER_TYPE = CLUSTER_TYPE;
+            this.METRIC_TYPE = METRIC_TYPE;
+            this.S3_BUCKET_DATA_FILE = S3_BUCKET_DATA_FILE;
+            this.AWSKey = AWSKey;
+            this.AWSSecret = AWSSecret;
+            this.EMRLogDir = EMRLogDir;
+        }
+
+        @Override
+        public void run() {
+            ClusterManager clusterManager = new ClusterManager(METRIC_TYPE,
+                    S3_BUCKET_DATA_FILE,
+                    AWSKey,
+                    AWSSecret,
+                    EMRLogDir,
+                    CLUSTER_TYPE);
+
+            executionResults.add(clusterManager.startBenchmark());
+        }
     }
 }

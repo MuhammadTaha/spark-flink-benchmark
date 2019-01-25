@@ -1,4 +1,4 @@
-package benchmark.io;
+/*package benchmark.io;
 
 import java.io.File;
 import java.util.Calendar;
@@ -25,6 +25,15 @@ public class S3Connector {
 	private final String awsRegion;
 	private final String s3Url;
 	private final String s3BucketName;
+
+	public S3Connector(String awsId, String awsSecret, String awsSessionToken, String awsRegion, String s3Url, String s3BucketName) {
+		this.awsId = awsId;
+		this.awsSecret = awsSecret;
+		this.awsSessionToken = awsSessionToken;
+		this.awsRegion = awsRegion;
+		this.s3Url = s3Url;
+		this.s3BucketName = s3BucketName;
+	}
 
 	public boolean upload(File dataFile) {
 		String fileName = String.format("DATA_%o_%o", dataFile.length(), Calendar.getInstance().getTimeInMillis());
@@ -60,3 +69,4 @@ public class S3Connector {
 		throw new NotImplementedException();
 	}
 }
+*/

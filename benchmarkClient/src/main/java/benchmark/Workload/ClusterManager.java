@@ -87,8 +87,8 @@ public class ClusterManager implements IClusterManager {
                         //.withEc2KeyName("key_virginia")
                         .withInstanceCount(3)
                         .withKeepJobFlowAliveWhenNoSteps(false)
-                        .withMasterInstanceType("m3.xlarge")
-                        .withSlaveInstanceType("m3.xlarge"));
+                        .withMasterInstanceType("m5.xlarge")
+                        .withSlaveInstanceType("m5.xlarge"));
 
         return getExecutionTime(emr, request, this.CLUSTER_TYPE);
 
@@ -105,13 +105,10 @@ public class ClusterManager implements IClusterManager {
         if (clusterType.equals("spark")) {
             return new HadoopJarStepConfig()
                     .withJar("command-runner.jar")
-                    //TODO parameter setting
-                    .withArgs("spark-submit", "--executor-memory", "1g", "/home/hadoop/jarfile/" + this.JARFile, "10",
-                            inputFile);
+                    .withArgs("spark-submit", "--executor-memory", "1g", "/home/hadoop/jarfile/" + this.JARFile, inputFile);
         } else {
             return new HadoopJarStepConfig()
                     .withJar("command-runner.jar")
-                    //TODO parameter setting
                     .withArgs("flink", "run", "-m", "yarn-cluster", "-yn", "2", "/home/hadoop/jarfile/" + this.JARFile,
                             "--input", inputFile);
         }
@@ -139,7 +136,7 @@ public class ClusterManager implements IClusterManager {
         int i = 0;
         while (i < steps.size()) {
             if (steps.get(i).getName().equals(clusterType + " step")) {
-                System.out.println("Step ID: " + steps.get(i).getId());
+                System.out.println("(" + result.getJobFlowId() + ") Step ID: " + steps.get(i).getId());
                 step.setStepId(steps.get(i).getId());
                 break;
             }
@@ -147,12 +144,12 @@ public class ClusterManager implements IClusterManager {
         }
 
         //Wait until the step is done:
-        System.out.println("Still waiting ...");
+        //System.out.println("Still waiting ...");
         while (!emr.describeStep(step).getStep().getStatus().getState().equals("COMPLETED")) {
             try {
                 //wait a bit
                 Thread.sleep(60000);
-                System.out.println("Still waiting ... Current state: " + emr.describeStep(step).getStep().getStatus().getState());
+                System.out.println("(" + result.getJobFlowId() + ") Still waiting ... Current state: " + emr.describeStep(step).getStep().getStatus().getState());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -161,7 +158,9 @@ public class ClusterManager implements IClusterManager {
         //Process execution time:
         long diffInMillies = emr.describeStep(step).getStep().getStatus().getTimeline().getEndDateTime().getTime()
                 - emr.describeStep(step).getStep().getStatus().getTimeline().getStartDateTime().getTime();
-        System.out.println("Execution time in ms: " + diffInMillies);
+        System.out.println("(" + result.getJobFlowId() + ") Execution time in ms: " + diffInMillies);
+
+        System.out.println("(" + result.getJobFlowId() + ") DONE");
 
         return diffInMillies;
     }
