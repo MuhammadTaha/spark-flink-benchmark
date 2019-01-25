@@ -11,10 +11,28 @@ The answer can be found [here](#documentation).
 The bucket which contains the JAR-files is a public AWS-S3-Bucket.
 
 ## Benchmark Client
-TODO short description
+The Benchmark Client first validate the input data and returns an Error if the input data isn't correct.
+Afterwards, if the input data was successfully verified data is generated randomly depending on the given size and 
+will be uploaded into the aws s3 Bucket. Then a benchmark test based on runtime and throughput is running depending of the given input. Finally, the measured runtime and throughput results are stored into a csv file.
+
+### Execution
+java -jar benchmarkclient-1.0.jar <aws_username> <aws_secret_key> <cluster_type> <metric_type> <s3_bucket_data_file> <s3_emr_log_dir> [data_size] [number_of_iterations]
+
 
 ### Input Parameters
-TODO list of all parameters
+| Input Field | Type | Required | Description | Examples |
+|--- |--- |--- |--- |--- |
+| `aws_username` | `String` | yes | Your aws username | `*****@win.tu-berlin.de` |
+| `aws_secret_key` | `String` | Yes | Your aws secret key | `**********************262mUimD25jtF` |
+| `cluster_type` | `String` | Yes | The cluster type which can be benchmarked. | `flink`, `spark` |
+| `metric_type` | `String` | Yes | The metric type which can be benchmarked. | `aggregate`, `groupby`, `sorting`|
+| `s3_bucket_data_file` | `String` | Yes | The path to the data.csv file of the aws s3 bucket. | `s3://test-emr-ws1819/data/data.csv`|
+| `s3_emr_log_dir` | `String` | Yes | The path of the log directory in your aws s3 bucket. | `s3://test-emr-ws1819/log/`|
+| `data_size` | `String` | No | The location of the VirtualBusStop. | `4m`, `1g`, `5g`|
+| `number_of_iterations` | `int` | No | The location of the VirtualBusStop. | `1`, `5`, `10`|
+
+  
+  
 
 ## Workloads/Metrics
 We defined the following fixed data structure (CSV file):
