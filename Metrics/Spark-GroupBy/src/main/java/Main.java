@@ -23,8 +23,7 @@ public class Main {
 
         Dataset<Row> data = spark.read().csv(args[0]);
         data = data.toDF("id", "userId", "title", "genre", "author", "pages", "publisher", "date", "price");
-        Dataset<Row> genre = data.groupBy("genre").count();
-        genre.show(data.collectAsList().size(),false);
+        data.groupBy("genre").count();
 
 
         spark.stop();
