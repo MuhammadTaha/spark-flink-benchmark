@@ -9,9 +9,9 @@ public class ArgumentValidator {
 
 	public static boolean validArguments(String[] inputArgs) {
 
-		if (inputArgs.length < 5 || inputArgs.length > 8) {
+		if (inputArgs.length < 5 || inputArgs.length > 9) {
 			System.out.println(
-					"Please run: java -jar benchmarkclient-1.0.jar <user> <secret> <cluster_type> <metric_type> <s3_bucket_data_file> <s3_emr_log_dir> [data_size] [number_of_iterations]");
+					"Please run: java -jar benchmarkclient-1.0.jar <user> <secret> <cluster_type> <metric_type> <s3_bucket_data_file> <s3_emr_log_dir> [data_size] [number_of_iterations] [aws_session_token]");
 			return false;
 		}
 
