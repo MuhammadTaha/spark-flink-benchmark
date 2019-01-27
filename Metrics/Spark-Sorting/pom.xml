@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>spark</groupId>
-    <artifactId>sorting</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>SortingSpark</artifactId>
+    <version>1.0</version>
     <build>
         <plugins>
             <plugin>

@@ -1,14 +1,22 @@
 package benchmark;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.BasicSessionCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.AmazonS3URI;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+
+import benchmark.Workload.WorkloadManager;
 
 public class BenchmarkClient {
 
@@ -47,8 +55,17 @@ public class BenchmarkClient {
 		// generation and upload
 		AmazonS3URI uri = new AmazonS3URI(S3_BUCKET_DATA_FILE);
 		AmazonS3 s3;
-		s3 = AmazonS3ClientBuilder.standard().withRegion("us-east-1").withCredentials(new AWSStaticCredentialsProvider(
-				new BasicSessionCredentials(AWS_USERNAME, AWS_USER_SECRET, AWS_SESSION_TOKEN))).build();
+
+		if(AWS_SESSION_TOKEN.isEmpty()) {
+			BasicAWSCredentials credentials = new BasicAWSCredentials(AWS_USERNAME, AWS_USER_SECRET);
+			s3 = AmazonS3ClientBuilder.standard().withRegion("us-east-1").withCredentials(new AWSStaticCredentialsProvider(
+					credentials)).build();
+		} else {
+			BasicSessionCredentials credentials = new BasicSessionCredentials(AWS_USERNAME, AWS_USER_SECRET, AWS_SESSION_TOKEN);
+			s3 = AmazonS3ClientBuilder.standard().withRegion("us-east-1").withCredentials(new AWSStaticCredentialsProvider(
+					credentials)).build();
+		}
+
 		if (!s3.doesObjectExist(uri.getBucket(), uri.getKey())) {
 			if (!DATA_SIZE.isEmpty()) {
 				DataGenerator dataGenerator = new DataGenerator();
@@ -69,40 +86,42 @@ public class BenchmarkClient {
 		}
 
 		// TODO - WorkloadManager
-//		List<Long> executionResults = new ArrayList<Long>();
-//		WorkloadManager workloadManager = new WorkloadManager(AWS_USERNAME, AWS_USER_SECRET, EMR_LOG_DIR);
-//		executionResults = workloadManager.startBenchmark(CLUSTER_TYPE, METRIC_TYPE, S3_BUCKET_DATA_FILE, AWS_USERNAME,
-//				AWS_USER_SECRET, EMR_LOG_DIR, NUMBER_OF_ITERATIONS);
-//
-//		// Write results into csv file
-//		try {
-//			long dataSizeInMb = 0;
-//			double executionTimeInSec = 0;
-//			if (DATA_SIZE.contains("mb")) {
-//				dataSizeInMb = Long.parseLong((DATA_SIZE.replaceAll("mb", "")));
-//			} else if (DATA_SIZE.contains("gb")) {
-//				dataSizeInMb = Long.parseLong((DATA_SIZE.replaceAll("gb", ""))) * Long.parseLong("1024");
-//			}
-//
-//			String file_name = CLUSTER_TYPE + "_" + METRIC_TYPE + "_results.csv";
-//			File file = new File(file_name);
-//			FileWriter fw = new FileWriter(file);
-//			BufferedWriter bw = new BufferedWriter(fw);
-//
-//			bw.write("ClusterType,Metric,Runtime,Throughput");
-//			bw.newLine();
-//			for (int i = 0; i < executionResults.size(); i++) {
-//				executionTimeInSec = (double) Long.parseLong("" + executionResults.get(i)) / 1000;
-//				bw.write(CLUSTER_TYPE + "," + METRIC_TYPE + "," + executionResults.get(i) + ","
-//						+ executionResults.get(i) + dataSizeInMb / executionTimeInSec);
-//				bw.newLine();
-//			}
-//
-//			bw.close();
-//			fw.close();
-//		} catch (IOException e) {
-//			System.out.println(e);
-//		}
-//
+		List<Long> executionResults = new ArrayList<Long>();
+		WorkloadManager workloadManager = new WorkloadManager(AWS_USERNAME, AWS_USER_SECRET, EMR_LOG_DIR);
+		executionResults = workloadManager.startBenchmark(CLUSTER_TYPE, METRIC_TYPE, S3_BUCKET_DATA_FILE, AWS_USERNAME,
+				AWS_USER_SECRET, EMR_LOG_DIR, NUMBER_OF_ITERATIONS);
+
+		// Write results into csv file
+		try {
+			long dataSizeInMb = 0;
+			double executionTimeInSec = 0;
+			if (DATA_SIZE.contains("mb")) {
+				dataSizeInMb = Long.parseLong((DATA_SIZE.replaceAll("mb", "")));
+			} else if (DATA_SIZE.contains("gb")) {
+				dataSizeInMb = Long.parseLong((DATA_SIZE.replaceAll("gb", ""))) * Long.parseLong("1024");
+			}
+
+			String file_name = CLUSTER_TYPE + "_" + METRIC_TYPE +"_"+DATA_SIZE+ "_results.csv";
+			File file = new File(file_name);
+			FileWriter fw = new FileWriter(file);
+			BufferedWriter bw = new BufferedWriter(fw);
+
+			bw.write("ClusterType,Metric,Runtime,Throughput");
+			bw.newLine();
+
+			for(int i=0;i<executionResults.size();i++)
+			{
+				executionTimeInSec = (double) Long.parseLong(""+ executionResults.get(i)) / 1000;
+				double throughput = executionResults.get(i)+dataSizeInMb / executionTimeInSec;
+				bw.write(CLUSTER_TYPE+","+METRIC_TYPE+","+executionResults.get(i)+","+throughput);
+				bw.newLine();
+			}
+
+			bw.close();
+			fw.close();
+		} catch (IOException e) {
+			System.out.println(e);
+		}
+
 	}
 }

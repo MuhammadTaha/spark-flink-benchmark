@@ -38,19 +38,13 @@ public class WorkloadManager {
     public List<Long> startBenchmark(String CLUSTER_TYPE, String METRIC_TYPE, String S3_BUCKET_DATA_FILE,
                                         String AWSKey, String AWSSecret, String EMRLogDir, int numberOfIteration) throws InterruptedException {
 
-        ClusterManager clusterManager = new ClusterManager(METRIC_TYPE,
-                S3_BUCKET_DATA_FILE,
-                AWSKey,
-                AWSSecret,
-                EMRLogDir,
-                CLUSTER_TYPE);
 
         //execute EMR clusters in parallel
-        Thread emrThreads[] = new Thread[numberOfIteration];
+        Thread emrThreads[] = new Thread[1];
         for (int i = 0; i < emrThreads.length; i++)
         {
             Thread T1 = new Thread(new EMRThread(CLUSTER_TYPE, METRIC_TYPE, S3_BUCKET_DATA_FILE,
-                    AWSKey, AWSSecret, EMRLogDir));
+                    AWSKey, AWSSecret, EMRLogDir, numberOfIteration));
             T1.start();
             emrThreads[i] = T1;
         }
@@ -73,15 +67,17 @@ public class WorkloadManager {
         String AWSKey;
         String AWSSecret;
         String EMRLogDir;
+		private int numberOfIteration;
 
         public EMRThread(String CLUSTER_TYPE, String METRIC_TYPE, String S3_BUCKET_DATA_FILE,
-                         String AWSKey, String AWSSecret, String EMRLogDir){
+                         String AWSKey, String AWSSecret, String EMRLogDir, int numberOfIteration){
             this.CLUSTER_TYPE = CLUSTER_TYPE;
             this.METRIC_TYPE = METRIC_TYPE;
             this.S3_BUCKET_DATA_FILE = S3_BUCKET_DATA_FILE;
             this.AWSKey = AWSKey;
             this.AWSSecret = AWSSecret;
             this.EMRLogDir = EMRLogDir;
+            this.numberOfIteration = numberOfIteration;
         }
 
         @Override
@@ -91,7 +87,7 @@ public class WorkloadManager {
                     AWSKey,
                     AWSSecret,
                     EMRLogDir,
-                    CLUSTER_TYPE);
+                    CLUSTER_TYPE, numberOfIteration);
 
             executionResults.add(clusterManager.startBenchmark());
         }

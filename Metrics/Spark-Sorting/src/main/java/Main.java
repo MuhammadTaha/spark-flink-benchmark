@@ -1,17 +1,6 @@
-import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.sql.*;
 import org.apache.spark.sql.types.*;
 
-import java.sql.Timestamp;
-
-import java.time.Duration;
-import java.time.Instant;
-
-import java.text.SimpleDateFormat;
-
-import org.apache.log4j.Logger;
-
-import org.apache.log4j.PropertyConfigurator;
 
 
 public class Main {

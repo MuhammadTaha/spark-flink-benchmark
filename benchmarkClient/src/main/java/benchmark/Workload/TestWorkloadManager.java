@@ -16,17 +16,18 @@ public class TestWorkloadManager {
     public static void main(String[] args) throws InterruptedException {
         String AWS_USERNAME = args[0];
         String AWS_USER_SECRET = args[1];
-        String CLUSTER_TYPE = "flink";
-        String METRIC_TYPE = "groupby";
-        String DATA_SIZE = "20gb"; //1gb, 5gb, 10gb
+        String CLUSTER_TYPE = "spark";
+        String METRIC_TYPE = "sorting";
+        String DATA_SIZE = "20mb"; //1gb, 5gb, 10gb
         int ITER = 1;
         List<Long> executionResults = new ArrayList<Long>();
 
         //TODO new input parameters:
         // Concrete path to the data file
-        String S3_BUCKET_DATA_FILE = "s3://test-emr-ws1819/data/data.csv";
+        //String S3_BUCKET_DATA_FILE = "s3://test-emr-ws1819/data/data.csv";
+        String S3_BUCKET_DATA_FILE = "s3://ws1819-as3-group15-data2/csv/data_20m.csv";
         //log directory for EMR cluster; just an empty directory in a S3 bucket
-        String EMR_LOG_DIR = "s3://test-emr-ws1819/log/";
+        String EMR_LOG_DIR = "s3://ws1819-as3-group15-data2/csv/";
         // ####### End new parameters
 
 
@@ -54,7 +55,7 @@ public class TestWorkloadManager {
                 dataSizeInMb = Long.parseLong((DATA_SIZE.replaceAll("gb",""))) * Long.parseLong("1024");
             }
 
-            String file_name = CLUSTER_TYPE+"_"+METRIC_TYPE+"_results.csv";
+            String file_name = CLUSTER_TYPE+"_"+METRIC_TYPE+"_"+DATA_SIZE+"_results.csv";
             File file = new File(file_name);
             FileWriter fw = new FileWriter(file);
             BufferedWriter bw = new BufferedWriter(fw);
@@ -64,7 +65,8 @@ public class TestWorkloadManager {
             for(int i=0;i<executionResults.size();i++)
             {
                 executionTimeInSec = (double) Long.parseLong(""+ executionResults.get(i)) / 1000;
-                bw.write(CLUSTER_TYPE+","+METRIC_TYPE+","+executionResults.get(i)+","+executionResults.get(i)+(double)dataSizeInMb / (double)executionTimeInSec);
+                double throughput = (double)dataSizeInMb / (double)executionTimeInSec;
+                bw.write(CLUSTER_TYPE+","+METRIC_TYPE+","+executionResults.get(i)+","+throughput);
                 bw.newLine();
             }
 
