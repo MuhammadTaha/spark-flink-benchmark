@@ -1,7 +1,7 @@
+import org.apache.spark.SparkConf;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
-import org.apache.spark.SparkConf;
 
 
 
@@ -19,6 +19,9 @@ public class Main {
         SparkSession spark = SparkSession
                 .builder()
                 .config(conf)
+                .config("spark.executor.memory", "10g")
+                .config("spark.memory.offHeap.enabled",true)
+                .config("spark.memory.offHeap.size","4g") 
                 .getOrCreate();
 
         Dataset<Row> data = spark.read().csv(args[0]);
