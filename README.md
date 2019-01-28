@@ -22,7 +22,7 @@ java -jar benchmarkclient-1.0.jar <aws_username> <aws_secret_key> <cluster_type>
 ### Input Parameters
 | Input Field | Type | Required | Description | Examples |
 |--- |--- |--- |--- |--- |
-| `aws_username` | `String` | yes | Your aws username | `*****@win.tu-berlin.de` |
+| `aws_username` | `String` | yes | Your aws username | `*****@34kj` |
 | `aws_secret_key` | `String` | Yes | Your aws secret key | `**********************262mUimD25jtF` |
 | `cluster_type` | `String` | Yes | The cluster type which can be benchmarked. | `flink`, `spark` |
 | `metric_type` | `String` | Yes | The metric type which can be benchmarked. | `aggregate`, `groupby`, `sorting`|
