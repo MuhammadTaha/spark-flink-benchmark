@@ -50,4 +50,4 @@ When the jobs are done, the system will collect the runtime and throughput (=met
 
 [Report](https://www.overleaf.com/5617113597rhhbfccfpczh)
 
-[Poster](docs/Poster.pdf)
+[Poster](docs/Poster.pptx)
