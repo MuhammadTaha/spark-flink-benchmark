@@ -20,6 +20,6 @@ public class Main {
                         String.class, String.class, String.class,
                         String.class, String.class, String.class);
 
-        csvInput.max(8).print();
+        csvInput.max(8).first(1).print();
     }
 }
