@@ -12,7 +12,7 @@ The bucket which contains the JAR-files is a public AWS-S3-Bucket.
 
 ## Benchmark Client
 The Benchmark Client first validate the input data and returns an Error if the input data isn't correct.
-Afterwards, if the input data was successfully verified data is generated randomly depending on the given size and 
+Afterwards, if the input data was successfully verified data is generated randomly depending on the given size and
 will be uploaded into the aws s3 Bucket. Then a benchmark test based on runtime and throughput is running depending of the given input. Finally, the measured runtime and throughput results are stored into a csv file.
 
 ### Execution
@@ -31,8 +31,8 @@ java -jar benchmarkclient-1.0.jar <aws_username> <aws_secret_key> <cluster_type>
 | `data_size` | `String` | No | The location of the VirtualBusStop. | `4m`, `1g`, `5g`|
 | `number_of_iterations` | `int` | No | The location of the VirtualBusStop. | `1`, `5`, `10`|
 
-  
-  
+
+
 
 ## Workloads/Metrics
 We defined the following fixed data structure (CSV file):
@@ -48,6 +48,6 @@ When the jobs are done, the system will collect the runtime and throughput (=met
 
 ## Documentation
 
-[Report](https://github.com/flmu/ec2018-assignment3.git)
+[Report](https://de.overleaf.com/project/5c48853d95d38a3a6ff877b9)
 
 [Poster](docs/Poster.pdf)
